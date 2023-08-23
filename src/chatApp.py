@@ -1,3 +1,4 @@
+import os
 from flask import Flask, render_template, request
 server = Flask(__name__)
 
@@ -20,7 +21,17 @@ def handling_request_login():
 def handling_request_lobby():
     if request.method == 'POST':
         room=request.form['new_room']
-    return render_template('lobby.html')
+        with open('rooms/' + room + ".txt", 'w') as f:
+            f.write(room)
+    rooms = os.listdir('rooms/') 
+    new_rooms = [x[:-4] for x in rooms]
+    return render_template('lobby.html',room_names=new_rooms)
+
+
+def handling_request_chat():
+    
+    return render_template('chat.html')
+
 
 
 @server.route('/', methods=['GET', 'POST'])
@@ -38,6 +49,11 @@ def login():
 @server.route('/lobby', methods=['GET', 'POST'])
 def lobby():
     return handling_request_lobby()
+
+@server.route('/chat/<room_name>', methods=['GET', 'POST'])
+def chat():
+    return handling_request_chat()
+
 
 
 if __name__ == "__main__":
