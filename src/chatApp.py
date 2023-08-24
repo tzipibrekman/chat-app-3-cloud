@@ -1,5 +1,6 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request,redirect
 import os
+import csv
 server = Flask(__name__)
 
 def check_user_existing(name,password):
@@ -44,9 +45,9 @@ def handling_request_lobby():
     return render_template('lobby.html',room_names=new_rooms)
 
 
-def handling_request_chat():
+def handling_request_chat(room_name):
     
-    return render_template('chat.html')
+    return render_template('chat.html',room=room_name)
 
 
 @server.route('/', methods=['GET', 'POST'])
@@ -66,9 +67,12 @@ def lobby():
     return handling_request_lobby()
 
 @server.route('/chat/<room_name>', methods=['GET', 'POST'])
-def chat():
-    return handling_request_chat()
+def chat(room_name):
+    return handling_request_chat(room_name)
 
+@server.route('/logout', methods=['GET', 'POST'])
+def logout():
+    return handling_request_login()
 
 
 if __name__ == "__main__":
