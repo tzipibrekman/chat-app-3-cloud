@@ -1,7 +1,9 @@
-from flask import Flask, render_template, request,redirect
+from flask import Flask, render_template, request,redirect,session
 import os
 import csv
 server = Flask(__name__)
+app = Flask(__name__)
+app.secret_key = "123123"
 
 def check_user_existing(name,password):
     with open('../users.csv', 'r') as myFile:
@@ -32,17 +34,26 @@ def handling_request_login():
         name = request.form['username']
         password = request.form['password']
         if check_user_existing(name,password):
-            return redirect('/lobby')
+             session['username'] = name
+             return redirect('/lobby')
+        else:
+            return "invalid"
     return render_template('login.html')
 
+
 def handling_request_lobby():
-    if request.method == 'POST':
-        room=request.form['new_room']
-        with open('rooms/' + room + ".txt", 'w') as f:
-            f.write(room)
-    rooms = os.listdir('rooms/') 
-    new_rooms = [x[:-4] for x in rooms]
-    return render_template('lobby.html',room_names=new_rooms)
+    if 'username' in session:
+
+       if request.method == 'POST':
+           room=request.form['new_room']
+           with open('rooms/' + room + ".txt", 'w') as f:
+               f.write(room)
+       rooms = os.listdir('rooms/') 
+       new_rooms = [x[:-4] for x in rooms]
+       return render_template('lobby.html',room_names=new_rooms)
+    else:
+        return redirect('/login')
+
 
 
 def handling_request_chat(room_name):
@@ -72,6 +83,7 @@ def chat(room_name):
 
 @server.route('/logout', methods=['GET', 'POST'])
 def logout():
+    session.pop('username', None)
     return handling_request_login()
 
 
