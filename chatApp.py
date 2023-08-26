@@ -26,10 +26,7 @@ def check_user_existing(name,password):
      users=list(myReader)
     encode_pass=encode_password(password)
     for user in users:
-        print(user[1])
         if user[0]==name and decode_password(user[1])==password:
-        #if [name,encode_pass] in users:
-
            return True
     return False    
 
@@ -38,7 +35,6 @@ def handling_request_register():
         name = request.form['username']
         password = request.form['password']
         encoded_pass=encode_password(password)
-        print("encode::"+encoded_pass)
         #בדוק אם כבר קיים
         if check_user_existing(name,password):
             return redirect('/login')
