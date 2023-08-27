@@ -7,6 +7,9 @@ WORKDIR /code
 COPY requirements.txt .
 # install dependencies
 RUN pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org -r requirements.txt
+#environment variable
+ENV ROOMS_DIR='./rooms/'
+
 # copy the content of the local src directory to the working directory
 COPY . .
 # command to run on container start

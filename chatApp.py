@@ -21,6 +21,8 @@ def decode_password(user_pass):
 
 
 def check_user_existing(name,password):
+    po=   os.getenv('ROOMS_DIR')
+    print(po)
     with open('users.csv', 'r') as myFile:
      myReader = csv.reader(myFile)
      users=list(myReader)
@@ -35,7 +37,7 @@ def handling_request_register():
         name = request.form['username']
         password = request.form['password']
         encoded_pass=encode_password(password)
-        #בדוק אם כבר קיים
+        #check if user existing
         if check_user_existing(name,password):
             return redirect('/login')
         else:
@@ -62,9 +64,9 @@ def handling_request_lobby():
     if 'username' in session:
        if request.method == 'POST':
            room=request.form['new_room']
-           with open('rooms/' + room + ".txt", 'w') as f:
+           with open(os.getenv('ROOMS_DIR') + room + ".txt", 'w') as f:
                f.write("")
-       rooms = os.listdir('rooms/') 
+       rooms = os.listdir(os.getenv('ROOMS_DIR')) 
        new_rooms = [x[:-4] for x in rooms]
        return render_template('lobby.html',room_names=new_rooms)
     else:
@@ -76,11 +78,11 @@ def handling_request_chat(room_name):
     if request.method == 'POST':
         print ({room_name})
         message=request.form['msg']
-        file_path = "rooms/{}.txt".format(room_name)
-        with open('rooms/' + room_name+ ".txt", 'a',newline="") as f:
+        os.getenv('ROOMS_DIR')
+        with open(os.getenv('ROOMS_DIR') + room_name+ ".txt", 'a',newline="") as f:
           f.write(datetime.now().strftime("%Y-%m-%d %H:%M:%S")+", "+user_name +" : " +"\n"+ message +"\n")
    
-    with open('rooms/' + room_name+ ".txt", 'r') as file:
+    with open(os.getenv('ROOMS_DIR') + room_name+ ".txt", 'r') as file:
         file.seek(0)
         all_data = file.read()
         return all_data
