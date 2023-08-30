@@ -93,7 +93,7 @@ def handling_request_chat(room_name):
         all_data = file.read()
         return all_data
     
-    #אם 
+    
   
 
 @server.route('/', methods=['GET', 'POST'])
@@ -119,6 +119,21 @@ def chat(room_name):
 @server.route('/api/chat/<room_name>', methods=['GET', 'POST'])
 def api_chat(room_name):
     return handling_request_chat(room_name)
+
+
+@server.route('/api/chat/<room_name>/clear', methods=['POST'])
+def clear_room_data(room_name):
+    # Construct the file path
+    file_path = os.path.join(os.getenv('ROOMS_DIR'), room_name + ".txt")
+    
+    try:
+        # Clear the contents of the room's text file
+        with open(file_path, 'w') as f:
+            f.truncate(0)
+        return "Room data cleared successfully."
+    except Exception as e:
+        return f"An error occurred: {e}", 500
+
 
 @server.route('/logout', methods=['GET', 'POST'])
 def logout():

@@ -1,55 +1,73 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat App</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='chat.css') }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat App</title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='chat.css') }}">
+  
+  <!-- Include jQuery library -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
-</head>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script>
-      function room() {
-        var room = window.location.href.substring(window.location.href.lastIndexOf("/")+1);
-        if (room=="") room = "general";
-        return "/api/chat/"+room;
-      }
-  
-      function updateChat() {
-        $.get(room(), function(data) {
-          $("#chatbox").text(data);
-          window.setTimeout(updateChat, 1500);
-        })
-      }
-  
-      function sendmessage() {
-        $.post(room(), $("#inform").serialize() );
+  <!-- Include JavaScript code within the <head> section -->
+  <script>
+    function room() {
+      var room = window.location.href.substring(window.location.href.lastIndexOf("/") + 1);
+      if (room == "") room = "general";
+      return "/api/chat/" + room;
+    }
 
-      }
-  
-      $(document).ready(function() {
-        $("#chatbox").text("Loading chat...");
-        $("#sendBtn").click(sendmessage)
+    function updateChat() {
+      $.get(room(), function(data) {
+        $("#chatbox").text(data);
         window.setTimeout(updateChat, 1500);
       });
-  
-    </script>
-    <body>
-      <h1>Chat Room: {{ room }}</h1>
-    
-      <form id="inform" action="/api/chat"+room method="POST">
-        Message:<input name="msg" type=text>
-        <input id="sendBtn" type="button" value="send">
-        <input id="clearBtn" type="button" value="clear">
-      </form>
-      <pre id="chatbox">Loading...</pre>0.
-      
-      <br>
-      <br>
-      <a href="/lobby">Back to lobby</a>
-      <br>
-      <br>
-      <a href="/logout">logout</a>
+    }
 
-    </body>
-  </html>
+    function sendmessage() {
+      $.post(room(), $("#inform").serialize());
+    }
+
+    function clearRoom() {
+      if (confirm("Are you sure you want to clear all data in this room?")) {
+        $.ajax({
+          type: "POST",
+          url: room() + "/clear",
+          success: function(response) {
+            // Update the chatbox after clearing data
+            $("#chatbox").text(response);
+          },
+          error: function(error) {
+            console.error("Error clearing room data:", error);
+          }
+        });
+      }
+    }
+
+    $(document).ready(function() {
+      $("#chatbox").text("Loading chat...");
+      $("#sendBtn").click(sendmessage);
+      $("#clearBtn").click(clearRoom);
+      window.setTimeout(updateChat, 1500);
+    });
+  </script>
+</head>
+<body>
+  <h1>Chat Room: {{ room }}</h1>
+  
+  <form id="inform" action="/api/chat/{{ room }}" method="POST">
+    Message: <input name="msg" type="text">
+    <input id="sendBtn" type="button" value="Send">
+    <input id="clearBtn" type="button" value="Clear">
+  </form>
+  
+  <pre id="chatbox">Loading...</pre>
+  
+  <br>
+  <br>
+  <a href="/lobby">Back to lobby</a>
+  <br>
+  <br>
+  <a href="/logout">Logout</a>
+</body>
+</html>
