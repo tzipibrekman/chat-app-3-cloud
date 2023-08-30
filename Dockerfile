@@ -14,7 +14,6 @@ HEALTHCHECK --interval=10s --timeout=3s CMD curl -f http://localhost/health || e
 
 # Make port 80 available to the world outside this container
 EXPOSE 80
-
 ENV ROOMS_DIR='./rooms/'
 # command to run on container start
 CMD [ "python", "./chatApp.py" ] 
