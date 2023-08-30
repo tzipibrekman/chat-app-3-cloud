@@ -1,0 +1,5 @@
+.dockerfiles
+.git
+README.md
+init.sh
+delete.sh

@@ -117,6 +117,10 @@ def logout():
     session.pop('username', None)
     return handling_request_login()
 
+@server.route('/health', methods=['GET'])
+def health_check():
+    return "Healthy", 200
+
 
 if __name__ == "__main__":
  server.run(host='0.0.0.0',debug=True)
