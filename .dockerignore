@@ -1,5 +1,4 @@
 .dockerfiles
 .git
+.bash
 README.md
-init.sh
-delete.sh

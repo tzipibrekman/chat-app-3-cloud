@@ -127,7 +127,7 @@ def logout():
 
 @server.route('/health', methods=['GET'])
 def health_check():
-    return "Healthy", 200
+    return "OK", 200
 
 
 if __name__ == "__main__":
