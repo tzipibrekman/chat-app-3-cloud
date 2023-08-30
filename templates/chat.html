@@ -24,6 +24,7 @@
   
       function sendmessage() {
         $.post(room(), $("#inform").serialize() );
+
       }
   
       $(document).ready(function() {
@@ -39,6 +40,7 @@
       <form id="inform" action="/api/chat"+room method="POST">
         Message:<input name="msg" type=text>
         <input id="sendBtn" type="button" value="send">
+        <input id="clearBtn" type="button" value="clear">
       </form>
       <pre id="chatbox">Loading...</pre>0.
       

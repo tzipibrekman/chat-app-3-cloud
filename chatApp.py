@@ -7,6 +7,12 @@ server = Flask(__name__)
 server.secret_key = "123123"
 
 
+def delete_Room_data():
+    with open(file_path, "w") as file:
+        pass
+
+
+
 def encode_password(user_pass):
     pass_bytes = user_pass.encode('ascii')
     base64_bytes = base64.b64encode(pass_bytes)
@@ -86,6 +92,8 @@ def handling_request_chat(room_name):
         file.seek(0)
         all_data = file.read()
         return all_data
+    
+    #אם 
   
 
 @server.route('/', methods=['GET', 'POST'])
