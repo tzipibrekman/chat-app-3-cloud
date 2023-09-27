@@ -55,3 +55,14 @@ if [[ "$push_tag" == "y" ]]; then
 else
     echo "Tag not pushed to GitHub."
 fi
+
+
+# Ask the user if they want to push the image to the Artifact Registry repository.
+read -p "Do you want to push the image to the Artifact Registry repository? (y/n): " PUSH_IMAGE_ARTIFACT_REGISTRY
+
+if [[ "$PUSH_IMAGE_ARTIFACT_REGISTRY" == "y" ]]; then
+    gcloud config set auth/impersonate_service_account artifact-admin-sa@grunitech-mid-project.iam.gserviceaccount.com
+    gcloud auth configure-docker me-west1-docker.pkg.dev
+    docker tag myimage:$1 me-west1-docker.pkg.dev/grunitech-mid-project/naamakain-chat-app-images/myimage:$1
+    docker push me-west1-docker.pkg.dev/grunitech-mid-project/naamakain-chat-app-images/myimage:$1
+fi
